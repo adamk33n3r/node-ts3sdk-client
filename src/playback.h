@@ -17,9 +17,11 @@ public:
     static NAN_METHOD(ShutdownDevice);
     static NAN_METHOD(PlayWaveFile);
     static NAN_METHOD(ListDevices);
+    static NAN_METHOD(GetDefaultDevice);
     static NAN_METHOD(GetCurrentDevice);
     static NAN_METHOD(GetCurrentMode);
     static NAN_METHOD(ListModes);
+    static NAN_METHOD(GetDefaultMode);
     static NAN_METHOD(SetConfigValue);
     static NAN_METHOD(GetConfigValue);
 };

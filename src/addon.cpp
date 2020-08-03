@@ -51,9 +51,11 @@ void Init(v8::Local<v8::Object> exports)
     Nan::SetMethod(exports, "activateCaptureDevice",         Capture::ActivateDevice);
     Nan::SetMethod(exports, "setLocalTestMode",              Capture::SetLocalTestMode);
     Nan::SetMethod(exports, "getCaptureDeviceList",          Capture::ListDevices);
+    Nan::SetMethod(exports, "getDefaultCaptureDevice",       Capture::GetDefaultDevice);
     Nan::SetMethod(exports, "getCurrentCaptureDeviceName",   Capture::GetCurrentDevice);
     Nan::SetMethod(exports, "getCurrentCaptureMode",         Capture::GetCurrentMode);
     Nan::SetMethod(exports, "getCaptureModeList",            Capture::ListModes);
+    Nan::SetMethod(exports, "getDefaultCaptureMode",         Capture::GetDefaultMode);
     Nan::SetMethod(exports, "getPreProcessorInfoValueFloat", Capture::GetInfoValue);
     Nan::SetMethod(exports, "getPreProcessorConfigValue",    Capture::GetConfigValue);
     Nan::SetMethod(exports, "setPreProcessorConfigValue",    Capture::SetConfigValue);
@@ -65,9 +67,11 @@ void Init(v8::Local<v8::Object> exports)
     Nan::SetMethod(exports, "initiateGracefulPlaybackShutdown", Playback::ShutdownDevice);
     Nan::SetMethod(exports, "playWaveFile",                     Playback::PlayWaveFile);
     Nan::SetMethod(exports, "getPlaybackDeviceList",            Playback::ListDevices);
+    Nan::SetMethod(exports, "getDefaultPlaybackDevice",         Playback::GetDefaultDevice);
     Nan::SetMethod(exports, "getCurrentPlaybackDeviceName",     Playback::GetCurrentDevice);
     Nan::SetMethod(exports, "getCurrentPlaybackMode",           Playback::GetCurrentMode);
     Nan::SetMethod(exports, "getPlaybackModeList",              Playback::ListModes);
+    Nan::SetMethod(exports, "getDefaultPlaybackMode",           Playback::GetDefaultMode);
     Nan::SetMethod(exports, "getPlaybackConfigValueAsFloat",    Playback::GetConfigValue);
     Nan::SetMethod(exports, "setPlaybackConfigValue",           Playback::SetConfigValue);
     

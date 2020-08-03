@@ -145,7 +145,6 @@ NAN_METHOD(Capture::ListDevices)
     unsigned int error;
     char*        mode;
     char*        modeDefault;
-    char**       deviceDefault;
     char***      devices;
     
     if((error = Argument::num(info, 0, 1)) != ERROR_ok)
@@ -163,11 +162,6 @@ NAN_METHOD(Capture::ListDevices)
         return Error::throwException(error);
     }
     
-    if((error = ts3client_getDefaultCaptureDevice(modeDefault, &deviceDefault)) != ERROR_ok)
-    {
-        return Error::throwException(error);
-    }
-    
     if((error = ts3client_getCaptureDeviceList(mode, &devices)) != ERROR_ok)
     {
         return Error::throwException(error);
@@ -178,11 +172,6 @@ NAN_METHOD(Capture::ListDevices)
     {}
     
     v8::Local<v8::Array> arr = Nan::New<v8::Array>(n+1);
-    v8::Local<v8::Array> def = Nan::New<v8::Array>(2);
-    
-    Nan::Set(def, 0, Nan::New(deviceDefault[0]).ToLocalChecked());
-    Nan::Set(def, 1, Nan::New(deviceDefault[1]).ToLocalChecked());
-    Nan::Set(arr, 0, def);
     
     for(int i = 0; devices[i] != NULL; ++i)
     {
@@ -190,7 +179,7 @@ NAN_METHOD(Capture::ListDevices)
         
         Nan::Set(itm, 0, Nan::New(devices[i][0]).ToLocalChecked());
         Nan::Set(itm, 1, Nan::New(devices[i][1]).ToLocalChecked());
-        Nan::Set(arr, i+1, itm);
+        Nan::Set(arr, i, itm);
         
         ts3client_freeMemory(devices[i][0]);
         ts3client_freeMemory(devices[i][1]);
@@ -200,9 +189,37 @@ NAN_METHOD(Capture::ListDevices)
     info.GetReturnValue().Set(arr);
     
     ts3client_freeMemory(modeDefault);
-    ts3client_freeMemory(deviceDefault);
     ts3client_freeMemory(devices);
 }
+
+/**
+ * Wrapper for ts3client_getDefaultCaptureDevice().
+ */
+NAN_METHOD(Capture::GetDefaultDevice)
+{
+    unsigned int error;
+    char**       deviceDefault;
+
+    if((error = Argument::num(info, 1, 1)) != ERROR_ok)
+    {
+        return Error::throwException(error);
+    }
+
+    char* mode = *Nan::Utf8String(info[0]);
+    if((error = ts3client_getDefaultCaptureDevice(mode, &deviceDefault)) != ERROR_ok)
+    {
+        return Error::throwException(error);
+    }
+
+    v8::Local<v8::Array> def = Nan::New<v8::Array>(2);
+    Nan::Set(def, 0, Nan::New(deviceDefault[0]).ToLocalChecked());
+    Nan::Set(def, 1, Nan::New(deviceDefault[1]).ToLocalChecked());
+
+    info.GetReturnValue().Set(def);
+
+    ts3client_freeMemory(deviceDefault);
+}
+
 
 /**
  * Wrapper for ts3client_getCurrentCaptureDeviceName().
@@ -297,6 +314,29 @@ NAN_METHOD(Capture::ListModes)
     info.GetReturnValue().Set(arr);
     
     ts3client_freeMemory(modes);
+}
+
+/**
+ * Wrapper for ts3client_getDefaultCaptureMode().
+ */
+NAN_METHOD(Capture::GetDefaultMode)
+{
+    unsigned int error;
+    char*        modeDefault;
+    
+    if((error = Argument::num(info, 0, 1)) != ERROR_ok)
+    {
+        return Error::throwException(error);
+    }
+    
+    if((error = ts3client_getDefaultCaptureMode(&modeDefault)) != ERROR_ok)
+    {
+        return Error::throwException(error);
+    }
+    
+    info.GetReturnValue().Set(Nan::New(modeDefault).ToLocalChecked());
+    
+    ts3client_freeMemory(modeDefault);
 }
 
 /**
