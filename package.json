@@ -8,8 +8,16 @@
     "type": "git",
     "url": "git://github.com/svenpaulsen/node-ts3sdk-client.git"
   },
+  "scripts": {
+    "build": "node-gyp build",
+    "rebuild": "node-gyp rebuild",
+    "install": "node-gyp rebuild",
+    "start": "node ./examples/client_minimal.js"
+  },
+  "dependencies": {
+    "nan": "^2.7.0"
+  },
   "devDependencies": {
-    "nan": "^2.7.0",
     "node-gyp": "^7.0.0"
   }
 }
