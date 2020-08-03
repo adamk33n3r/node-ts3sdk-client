@@ -55,6 +55,8 @@ NAN_METHOD(Capture::OpenDevice)
         return Error::throwException(error);
     }
     
+    freeMemory(mode);
+    freeMemory(device);
     ts3client_freeMemory(modeDefault);
     ts3client_freeMemory(deviceDefault);
 }
@@ -188,6 +190,7 @@ NAN_METHOD(Capture::ListDevices)
     
     info.GetReturnValue().Set(arr);
     
+    freeMemory(mode);
     ts3client_freeMemory(modeDefault);
     ts3client_freeMemory(devices);
 }
@@ -370,6 +373,8 @@ NAN_METHOD(Capture::GetInfoValue)
     }
     
     info.GetReturnValue().Set(Nan::New<v8::Number>(val));
+    
+    freeMemory(key);
 }
 
 /**
@@ -404,6 +409,7 @@ NAN_METHOD(Capture::GetConfigValue)
     
     info.GetReturnValue().Set(Nan::New(val).ToLocalChecked());
     
+    freeMemory(key);
     ts3client_freeMemory(val);
 }
 
@@ -441,6 +447,9 @@ NAN_METHOD(Capture::SetConfigValue)
     {
         return Error::throwException(error);
     }
+
+    freeMemory(key);
+    freeMemory(val);
 }
 
 /**
@@ -475,5 +484,6 @@ NAN_METHOD(Capture::GetEncoderValue)
     
     info.GetReturnValue().Set(Nan::New(val).ToLocalChecked());
     
+    freeMemory(key);
     ts3client_freeMemory(val);
 }
