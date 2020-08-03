@@ -19,42 +19,42 @@ NAN_METHOD(Playback::OpenDevice)
     char*        modeDefault;
     char*        device;
     char**       deviceDefault;
-    
+
     if((error = Argument::num(info, 1, 3)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getDefaultPlayBackMode(&modeDefault)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getDefaultPlaybackDevice(modeDefault, &deviceDefault)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &mode, modeDefault)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &device, deviceDefault[1])) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_openPlaybackDevice(scHandlerID, mode, device)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     freeMemory(mode);
     freeMemory(device);
     ts3client_freeMemory(modeDefault);
@@ -68,17 +68,17 @@ NAN_METHOD(Playback::CloseDevice)
 {
     unsigned int error;
     uint64       scHandlerID;
-    
+
     if((error = Argument::num(info, 1)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_closePlaybackDevice(scHandlerID)) != ERROR_ok)
     {
         return Error::throwException(error);
@@ -92,17 +92,17 @@ NAN_METHOD(Playback::ShutdownDevice)
 {
     unsigned int error;
     uint64       scHandlerID;
-    
+
     if((error = Argument::num(info, 1)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_initiateGracefulPlaybackShutdown(scHandlerID)) != ERROR_ok)
     {
         return Error::throwException(error);
@@ -117,22 +117,22 @@ NAN_METHOD(Playback::PlayWaveFile)
     unsigned int error;
     uint64       scHandlerID;
     char*        path;
-    
+
     if((error = Argument::num(info, 2)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &path, "")) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_playWaveFile(scHandlerID, path)) != ERROR_ok)
     {
         return Error::throwException(error);
@@ -150,33 +150,33 @@ NAN_METHOD(Playback::ListDevices)
     char*        mode;
     char*        modeDefault;
     char***      devices;
-    
+
     if((error = Argument::num(info, 0, 1)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getDefaultPlayBackMode(&modeDefault)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &mode, modeDefault)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getPlaybackDeviceList(mode, &devices)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     int n = 0;
     for(; devices[n] != NULL; ++n)
     {}
-    
+
     v8::Local<v8::Array> arr = Nan::New<v8::Array>(n);
-    
+
     for(int i = 0; devices[i] != NULL; ++i)
     {
         v8::Local<v8::Array> itm = Nan::New<v8::Array>(2);
@@ -189,9 +189,9 @@ NAN_METHOD(Playback::ListDevices)
         ts3client_freeMemory(devices[i][1]);
         ts3client_freeMemory(devices[i]);
     }
-    
+
     info.GetReturnValue().Set(arr);
-    
+
     freeMemory(mode);
     ts3client_freeMemory(modeDefault);
     ts3client_freeMemory(devices);
@@ -234,24 +234,24 @@ NAN_METHOD(Playback::GetCurrentDevice)
     uint64       scHandlerID;
     char*        device;
     int          isDefault;
-    
+
     if((error = Argument::num(info, 1)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getCurrentPlaybackDeviceName(scHandlerID, &device, &isDefault)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(device).ToLocalChecked());
-    
+
     ts3client_freeMemory(device);
 }
 
@@ -263,24 +263,24 @@ NAN_METHOD(Playback::GetCurrentMode)
     unsigned int error;
     uint64       scHandlerID;
     char*        mode;
-    
+
     if((error = Argument::num(info, 1)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getCurrentPlayBackMode(scHandlerID, &mode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(mode).ToLocalChecked());
-    
+
     ts3client_freeMemory(mode);
 }
 
@@ -291,32 +291,32 @@ NAN_METHOD(Playback::ListModes)
 {
     unsigned int error;
     char**       modes;
-    
+
     if((error = Argument::num(info, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getPlaybackModeList(&modes)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     int n = 0;
     for(; modes[n] != NULL; ++n)
     {}
-    
+
     v8::Local<v8::Array> arr = Nan::New<v8::Array>(n);
-    
+
     for(int i = 0; modes[i] != NULL; ++i)
     {
         Nan::Set(arr, i, Nan::New(modes[i]).ToLocalChecked());
         
         ts3client_freeMemory(modes[i]);
     }
-    
+
     info.GetReturnValue().Set(arr);
-    
+
     ts3client_freeMemory(modes);
 }
 
@@ -327,14 +327,14 @@ NAN_METHOD(Playback::GetDefaultMode)
 {
     unsigned int error;
     char*        modeDefault;
-    
+
     if((error = ts3client_getDefaultPlayBackMode(&modeDefault)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(modeDefault).ToLocalChecked());
-    
+
     ts3client_freeMemory(modeDefault);
 }
 
@@ -347,27 +347,27 @@ NAN_METHOD(Playback::GetConfigValue)
     uint64       scHandlerID;
     char*        key;
     float        val;
-    
+
     if((error = Argument::num(info, 2)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &key, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getPlaybackConfigValueAsFloat(scHandlerID, key, &val)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New<v8::Number>(val));
 
     freeMemory(key);
@@ -382,27 +382,27 @@ NAN_METHOD(Playback::SetConfigValue)
     uint64       scHandlerID;
     char*        key;
     char*        val;
-    
+
     if((error = Argument::num(info, 3)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &key, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &val, "")) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_setPlaybackConfigValue(scHandlerID, key, val)) != ERROR_ok)
     {
         return Error::throwException(error);

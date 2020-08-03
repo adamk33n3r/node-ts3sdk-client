@@ -17,22 +17,22 @@ NAN_METHOD(Client::GetOwnID)
     unsigned int error;
     uint64       scHandlerID;
     anyID        clientID;
-    
+
     if((error = Argument::num(info, 1)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getClientID(scHandlerID, &clientID)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New<v8::Number>(clientID));
 }
 
@@ -45,27 +45,27 @@ NAN_METHOD(Client::GetOwnVarAsInt)
     uint64       scHandlerID;
     unsigned int flag;
     int          variable;
-    
+
     if((error = Argument::num(info, 2)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &flag, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getClientSelfVariableAsInt(scHandlerID, flag, &variable)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New<v8::Number>(variable));
 }
 
@@ -78,29 +78,29 @@ NAN_METHOD(Client::GetOwnVarAsString)
     uint64       scHandlerID;
     unsigned int flag;
     char*        variable;
-    
+
     if((error = Argument::num(info, 2)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &flag, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getClientSelfVariableAsString(scHandlerID, flag, &variable)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(variable).ToLocalChecked());
-    
+
     ts3client_freeMemory(variable);
 }
 
@@ -113,27 +113,27 @@ NAN_METHOD(Client::SetOwnVarAsInt)
     uint64       scHandlerID;
     unsigned int flag;
     int          variable;
-    
+
     if((error = Argument::num(info, 3)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &flag, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &variable, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_setClientSelfVariableAsInt(scHandlerID, flag, variable)) != ERROR_ok)
     {
         return Error::throwException(error);
@@ -149,27 +149,27 @@ NAN_METHOD(Client::SetOwnVarAsString)
     uint64       scHandlerID;
     unsigned int flag;
     char*        variable;
-    
+
     if((error = Argument::num(info, 3)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &flag, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &variable, "")) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_setClientSelfVariableAsString(scHandlerID, flag, variable)) != ERROR_ok)
     {
         return Error::throwException(error);
@@ -186,35 +186,35 @@ NAN_METHOD(Client::GetList)
     unsigned int error;
     uint64       scHandlerID;
     anyID*       clients;
-    
+
     if((error = Argument::num(info, 1)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getClientList(scHandlerID, &clients)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     int n = 0;
     for(; clients[n]; ++n)
     {}
-    
+
     v8::Local<v8::Array> arr = Nan::New<v8::Array>(n);
-    
+
     for(int i = 0; clients[i]; i++)
     {
         Nan::Set(arr, i, Nan::New<v8::Number>(clients[i]));
     }
-    
+
     info.GetReturnValue().Set(arr);
-    
+
     ts3client_freeMemory(clients);
 }
 
@@ -228,34 +228,34 @@ NAN_METHOD(Client::GetClones)
     char*        clientUID;
     char*        returnCode;
     char*        defretCode = Helper::createReturnCode();
-    
+
     if((error = Argument::num(info, 2, 3)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &clientUID, "")) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &returnCode, defretCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_requestClientIDs(scHandlerID, clientUID, returnCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(returnCode).ToLocalChecked());
-    
+
     freeMemory(clientUID);
     free(returnCode);
     free(defretCode);
@@ -270,27 +270,27 @@ NAN_METHOD(Client::GetChannelID)
     uint64       scHandlerID;
     anyID        clientID;
     uint64       channelID;
-    
+
     if((error = Argument::num(info, 2)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &clientID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getChannelOfClient(scHandlerID, clientID, &channelID)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New<v8::Number>(channelID));
 }
 
@@ -304,34 +304,34 @@ NAN_METHOD(Client::GetConectionInfo)
     anyID        clientID;
     char*        returnCode;
     char*        defretCode = Helper::createReturnCode();
-    
+
     if((error = Argument::num(info, 2, 3)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &clientID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &returnCode, defretCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_requestConnectionInfo(scHandlerID, clientID, returnCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(returnCode).ToLocalChecked());
-    
+
     free(returnCode);
     free(defretCode);
 }
@@ -346,34 +346,34 @@ NAN_METHOD(Client::GetVars)
     anyID        clientID;
     char*        returnCode;
     char*        defretCode = Helper::createReturnCode();
-    
+
     if((error = Argument::num(info, 2, 3)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &clientID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &returnCode, defretCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_requestClientVariables(scHandlerID, clientID, returnCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(returnCode).ToLocalChecked());
-    
+
     free(returnCode);
     free(defretCode);
 }
@@ -388,32 +388,32 @@ NAN_METHOD(Client::GetVarAsInt)
     anyID        clientID;
     unsigned int flag;
     int          variable;
-    
+
     if((error = Argument::num(info, 3)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &clientID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &flag, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getClientVariableAsInt(scHandlerID, clientID, flag, &variable)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New<v8::Number>(variable));
 }
 
@@ -427,32 +427,32 @@ NAN_METHOD(Client::GetVarAsUInt64)
     anyID        clientID;
     unsigned int flag;
     uint64       variable;
-    
+
     if((error = Argument::num(info, 3)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &clientID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &flag, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getClientVariableAsUInt64(scHandlerID, clientID, flag, &variable)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New<v8::Number>(variable));
 }
 
@@ -466,34 +466,34 @@ NAN_METHOD(Client::GetVarAsString)
     anyID        clientID;
     unsigned int flag;
     char*        variable;
-    
+
     if((error = Argument::num(info, 3)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &clientID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &flag, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getClientVariableAsString(scHandlerID, clientID, flag, &variable)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(variable).ToLocalChecked());
-    
+
     ts3client_freeMemory(variable);
 }
 
@@ -506,29 +506,29 @@ NAN_METHOD(Client::FlushUpdates)
     uint64       scHandlerID;
     char*        returnCode;
     char*        defretCode = Helper::createReturnCode();
-    
+
     if((error = Argument::num(info, 1, 2)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &returnCode, defretCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_flushClientSelfUpdates(scHandlerID, returnCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(returnCode).ToLocalChecked());
-    
+
     free(returnCode);
     free(defretCode);
 }
@@ -543,12 +543,12 @@ NAN_METHOD(Client::Mute)
     std::vector<anyID> clients;
     char*              returnCode;
     char*              defretCode = Helper::createReturnCode();
-    
+
     if((error = Argument::num(info, 2, 3)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
@@ -558,19 +558,19 @@ NAN_METHOD(Client::Mute)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &returnCode, defretCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_requestMuteClients(scHandlerID, (anyID*) clients.data(), returnCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(returnCode).ToLocalChecked());
-    
+
     free(returnCode);
     free(defretCode);
 }
@@ -585,12 +585,12 @@ NAN_METHOD(Client::Unmute)
     std::vector<anyID> clients;
     char*              returnCode;
     char*              defretCode = Helper::createReturnCode();
-    
+
     if((error = Argument::num(info, 2, 3)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
@@ -600,19 +600,19 @@ NAN_METHOD(Client::Unmute)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &returnCode, defretCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_requestUnmuteClients(scHandlerID, (anyID*) clients.data(), returnCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(returnCode).ToLocalChecked());
-    
+
     free(returnCode);
     free(defretCode);
 }
@@ -629,44 +629,44 @@ NAN_METHOD(Client::Move)
     char*        password;
     char*        returnCode;
     char*        defretCode = Helper::createReturnCode();
-    
+
     if((error = Argument::num(info, 3, 5)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &clientID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &channelID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 3, &password, "")) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 4, &returnCode, defretCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_requestClientMove(scHandlerID, clientID, channelID, password, returnCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(returnCode).ToLocalChecked());
-    
+
     freeMemory(password);
     free(returnCode);
     free(defretCode);
@@ -683,39 +683,39 @@ NAN_METHOD(Client::KickFromChannel)
     char*        reason;
     char*        returnCode;
     char*        defretCode = Helper::createReturnCode();
-    
+
     if((error = Argument::num(info, 2, 4)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &clientID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &reason, "")) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 3, &returnCode, defretCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_requestClientKickFromChannel(scHandlerID, clientID, reason, returnCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(returnCode).ToLocalChecked());
-    
+
     freeMemory(reason);
     free(returnCode);
     free(defretCode);
@@ -732,39 +732,39 @@ NAN_METHOD(Client::KickFromServer)
     char*        reason;
     char*        returnCode;
     char*        defretCode = Helper::createReturnCode();
-    
+
     if((error = Argument::num(info, 2, 4)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &clientID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &reason, "")) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 3, &returnCode, defretCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_requestClientKickFromServer(scHandlerID, clientID, reason, returnCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(returnCode).ToLocalChecked());
-    
+
     freeMemory(reason);
     free(returnCode);
     free(defretCode);
@@ -781,39 +781,39 @@ NAN_METHOD(Client::SendMessage)
     anyID        clientID;
     char*        returnCode;
     char*        defretCode = Helper::createReturnCode();
-    
+
     if((error = Argument::num(info, 3, 4)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &message, "")) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &clientID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 3, &returnCode, defretCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_requestSendPrivateTextMsg(scHandlerID, message, clientID, returnCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(returnCode).ToLocalChecked());
-    
+
     freeMemory(message);
     free(returnCode);
     free(defretCode);
@@ -826,17 +826,17 @@ NAN_METHOD(Client::SetRecordingStatus)
 {
     unsigned int error;
     uint64       scHandlerID;
-    
+
     if((error = Argument::num(info, 1)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_startVoiceRecording(scHandlerID)) != ERROR_ok)
     {
         return Error::throwException(error);
@@ -850,17 +850,17 @@ NAN_METHOD(Client::UnsetRecordingStatus)
 {
     unsigned int error;
     uint64       scHandlerID;
-    
+
     if((error = Argument::num(info, 1)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_stopVoiceRecording(scHandlerID)) != ERROR_ok)
     {
         return Error::throwException(error);
@@ -879,17 +879,17 @@ NAN_METHOD(Client::SetWhisperList)
     std::vector<anyID>  clients;
     char*               returnCode;
     char*               defretCode = Helper::createReturnCode();
-    
+
     if((error = Argument::num(info, 1, 5)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &clientID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
@@ -904,19 +904,19 @@ NAN_METHOD(Client::SetWhisperList)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 4, &returnCode, defretCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_requestClientSetWhisperList(scHandlerID, clientID, channels.empty() ? nullptr : channels.data(), clients.empty() ? nullptr : clients.data(), returnCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(returnCode).ToLocalChecked());
-    
+
     free(returnCode);
     free(defretCode);
 }
@@ -929,22 +929,22 @@ NAN_METHOD(Client::AllowWhispersFrom)
     unsigned int error;
     uint64       scHandlerID;
     anyID        clientID;
-    
+
     if((error = Argument::num(info, 2)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &clientID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_allowWhispersFrom(scHandlerID, clientID)) != ERROR_ok)
     {
         return Error::throwException(error);
@@ -959,22 +959,22 @@ NAN_METHOD(Client::PreventWhispersFrom)
     unsigned int error;
     uint64       scHandlerID;
     anyID        clientID;
-    
+
     if((error = Argument::num(info, 2)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &clientID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_removeFromAllowedWhispersFrom(scHandlerID, clientID)) != ERROR_ok)
     {
         return Error::throwException(error);
@@ -990,17 +990,17 @@ NAN_METHOD(Client::SetVolumeModifier)
     uint64       scHandlerID;
     anyID        clientID;
     float        val;
-    
+
     if((error = Argument::num(info, 3)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &clientID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
@@ -1010,7 +1010,7 @@ NAN_METHOD(Client::SetVolumeModifier)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_setClientVolumeModifier(scHandlerID, clientID, val)) != ERROR_ok)
     {
         return Error::throwException(error);

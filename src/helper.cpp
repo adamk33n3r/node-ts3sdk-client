@@ -13,7 +13,7 @@ char* Helper::createReturnCode(int length)
 {
     static char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     char*       random    = NULL;
-    
+
     if(length)
     {
         random = (char*) malloc(sizeof(char)*(length +1));
@@ -29,6 +29,6 @@ char* Helper::createReturnCode(int length)
             random[length] = '\0';
         }
     }
-    
+
     return random;
 }

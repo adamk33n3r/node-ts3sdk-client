@@ -17,35 +17,35 @@ NAN_METHOD(Channel::GetList)
     unsigned int error;
     uint64       scHandlerID;
     uint64*      channels;
-    
+
     if((error = Argument::num(info, 1)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getChannelList(scHandlerID, &channels)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     int n = 0;
     for(; channels[n]; ++n)
     {}
-    
+
     v8::Local<v8::Array> arr = Nan::New<v8::Array>(n);
-    
+
     for(int i = 0; channels[i]; i++)
     {
         Nan::Set(arr, i, Nan::New<v8::Number>(channels[i]));
     }
-    
+
     info.GetReturnValue().Set(arr);
-    
+
     ts3client_freeMemory(channels);
 }
 
@@ -58,40 +58,40 @@ NAN_METHOD(Channel::GetClients)
     uint64       scHandlerID;
     uint64       channelID;
     anyID*       clients;
-    
+
     if((error = Argument::num(info, 2)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &channelID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getChannelClientList(scHandlerID, channelID, &clients)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     int n = 0;
     for(; clients[n]; ++n)
     {}
-    
+
     v8::Local<v8::Array> arr = Nan::New<v8::Array>(n);
-    
+
     for(int i = 0; clients[i]; i++)
     {
         Nan::Set(arr, i, Nan::New<v8::Number>(clients[i]));
     }
-    
+
     info.GetReturnValue().Set(arr);
-    
+
     ts3client_freeMemory(clients);
 }
 
@@ -104,34 +104,34 @@ NAN_METHOD(Channel::GetID)
     uint64             scHandlerID;
     std::vector<char*> channelArr;
     uint64             channelID;
-    
+
     if((error = Argument::num(info, 2)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, channelArr, nullptr)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getChannelIDFromChannelNames(scHandlerID, channelArr.data(), &channelID)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New<v8::Number>(channelID));
-    
+
     for(int i = 0; i < (int) channelArr.size(); ++i)
     {
         free(channelArr[i]);
     }
-    
+
     channelArr.clear();
 }
 
@@ -144,27 +144,27 @@ NAN_METHOD(Channel::GetPID)
     uint64       scHandlerID;
     uint64       channelID;
     uint64       channelPID;
-    
+
     if((error = Argument::num(info, 2)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &channelID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getParentChannelOfChannel(scHandlerID, channelID, &channelPID)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New<v8::Number>(channelPID));
 }
 
@@ -177,27 +177,27 @@ NAN_METHOD(Channel::GetSecondsEmpty)
     uint64       scHandlerID;
     uint64       channelID;
     int          seconds;
-    
+
     if((error = Argument::num(info, 2)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &channelID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getChannelEmptySecs(scHandlerID, channelID, &seconds)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New<v8::Number>(seconds));
 }
 
@@ -211,34 +211,34 @@ NAN_METHOD(Channel::GetDescription)
     uint64       channelID;
     char*        returnCode;
     char*        defretCode = Helper::createReturnCode();
-    
+
     if((error = Argument::num(info, 2, 3)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &channelID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &returnCode, defretCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_requestChannelDescription(scHandlerID, channelID, returnCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(returnCode).ToLocalChecked());
-    
+
     free(returnCode);
     free(defretCode);
 }
@@ -253,32 +253,32 @@ NAN_METHOD(Channel::GetVarAsInt)
     uint64       channelID;
     unsigned int flag;
     int          variable;
-    
+
     if((error = Argument::num(info, 3)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &channelID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &flag, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getChannelVariableAsInt(scHandlerID, channelID, flag, &variable)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New<v8::Number>(variable));
 }
 
@@ -292,32 +292,32 @@ NAN_METHOD(Channel::GetVarAsUInt64)
     uint64       channelID;
     unsigned int flag;
     uint64       variable;
-    
+
     if((error = Argument::num(info, 3)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &channelID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &flag, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getChannelVariableAsUInt64(scHandlerID, channelID, flag, &variable)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New<v8::Number>(variable));
 }
 
@@ -331,34 +331,34 @@ NAN_METHOD(Channel::GetVarAsString)
     uint64       channelID;
     unsigned int flag;
     char*        variable;
-    
+
     if((error = Argument::num(info, 3)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &channelID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &flag, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getChannelVariableAsString(scHandlerID, channelID, flag, &variable)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(variable).ToLocalChecked());
-    
+
     ts3client_freeMemory(variable);
 }
 
@@ -372,32 +372,32 @@ NAN_METHOD(Channel::SetVarAsInt)
     uint64       channelID;
     unsigned int flag;
     int          variable;
-    
+
     if((error = Argument::num(info, 4)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &channelID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &flag, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 3, &variable, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_setChannelVariableAsInt(scHandlerID, channelID, flag, variable)) != ERROR_ok)
     {
         return Error::throwException(error);
@@ -414,32 +414,32 @@ NAN_METHOD(Channel::SetVarAsUInt64)
     uint64       channelID;
     unsigned int flag;
     uint64       variable;
-    
+
     if((error = Argument::num(info, 4)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &channelID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &flag, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 3, &variable, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_setChannelVariableAsUInt64(scHandlerID, channelID, flag, variable)) != ERROR_ok)
     {
         return Error::throwException(error);
@@ -456,37 +456,37 @@ NAN_METHOD(Channel::SetVarAsString)
     uint64       channelID;
     unsigned int flag;
     char*        variable;
-    
+
     if((error = Argument::num(info, 4)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &channelID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &flag, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 3, &variable, "")) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_setChannelVariableAsString(scHandlerID, channelID, flag, variable)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     freeMemory(variable);
 }
 
@@ -500,34 +500,34 @@ NAN_METHOD(Channel::FlushCreation)
     uint64       channelPID;
     char*        returnCode;
     char*        defretCode = Helper::createReturnCode();
-    
+
     if((error = Argument::num(info, 2, 3)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &channelPID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &returnCode, defretCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_flushChannelCreation(scHandlerID, channelPID, returnCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(returnCode).ToLocalChecked());
-    
+
     free(returnCode);
     free(defretCode);
 }
@@ -542,34 +542,34 @@ NAN_METHOD(Channel::FlushUpdates)
     uint64       channelID;
     char*        returnCode;
     char*        defretCode = Helper::createReturnCode();
-    
+
     if((error = Argument::num(info, 2, 3)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &channelID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &returnCode, defretCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_flushChannelUpdates(scHandlerID, channelID, returnCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(returnCode).ToLocalChecked());
-    
+
     free(returnCode);
     free(defretCode);
 }
@@ -586,44 +586,44 @@ NAN_METHOD(Channel::Move)
     uint64       newChannelOrder;
     char*        returnCode;
     char*        defretCode = Helper::createReturnCode();
-    
+
     if((error = Argument::num(info, 2, 5)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &channelID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &newChannelPID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 3, &newChannelOrder, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 4, &returnCode, defretCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_requestChannelMove(scHandlerID, channelID, newChannelPID, newChannelOrder, returnCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(returnCode).ToLocalChecked());
-    
+
     free(returnCode);
     free(defretCode);
 }
@@ -639,39 +639,39 @@ NAN_METHOD(Channel::Delete)
     int          force;
     char*        returnCode;
     char*        defretCode = Helper::createReturnCode();
-    
+
     if((error = Argument::num(info, 2, 4)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &channelID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &force, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 3, &returnCode, defretCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_requestChannelDelete(scHandlerID, channelID, force, returnCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(returnCode).ToLocalChecked());
-    
+
     free(returnCode);
     free(defretCode);
 }
@@ -686,34 +686,34 @@ NAN_METHOD(Channel::Subscribe)
     std::vector<uint64> channels;
     char*               returnCode;
     char*               defretCode = Helper::createReturnCode();
-    
+
     if((error = Argument::num(info, 2, 3)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, channels, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &returnCode, defretCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_requestChannelSubscribe(scHandlerID, channels.data(), returnCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(returnCode).ToLocalChecked());
-    
+
     free(returnCode);
     free(defretCode);
 }
@@ -728,34 +728,34 @@ NAN_METHOD(Channel::Unsubscribe)
     std::vector<uint64> channels;
     char*               returnCode;
     char*               defretCode = Helper::createReturnCode();
-    
+
     if((error = Argument::num(info, 2, 3)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, channels, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &returnCode, defretCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_requestChannelSubscribe(scHandlerID, channels.data(), returnCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(returnCode).ToLocalChecked());
-    
+
     free(returnCode);
     free(defretCode);
 }
@@ -769,29 +769,29 @@ NAN_METHOD(Channel::SubscribeAll)
     uint64       scHandlerID;
     char*        returnCode;
     char*        defretCode = Helper::createReturnCode();
-    
+
     if((error = Argument::num(info, 1, 2)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &returnCode, defretCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_requestChannelSubscribeAll(scHandlerID, returnCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(returnCode).ToLocalChecked());
-    
+
     free(returnCode);
     free(defretCode);
 }
@@ -805,29 +805,29 @@ NAN_METHOD(Channel::UnsubscribeAll)
     uint64       scHandlerID;
     char*        returnCode;
     char*        defretCode = Helper::createReturnCode();
-    
+
     if((error = Argument::num(info, 1, 2)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &returnCode, defretCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_requestChannelUnsubscribeAll(scHandlerID, returnCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(returnCode).ToLocalChecked());
-    
+
     free(returnCode);
     free(defretCode);
 }
@@ -843,39 +843,39 @@ NAN_METHOD(Channel::SendMessage)
     uint64       channelID;
     char*        returnCode;
     char*        defretCode = Helper::createReturnCode();
-    
+
     if((error = Argument::num(info, 3, 4)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &message, "")) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &channelID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 3, &returnCode, defretCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_requestSendChannelTextMsg(scHandlerID, message, channelID, returnCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(returnCode).ToLocalChecked());
-    
+
     free(returnCode);
     free(defretCode);
 }

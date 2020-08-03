@@ -18,29 +18,29 @@ NAN_METHOD(Server::GetConectionInfo)
     uint64       scHandlerID;
     char*        returnCode;
     char*        defretCode = Helper::createReturnCode();
-    
+
     if((error = Argument::num(info, 1, 2)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &returnCode, defretCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_requestServerConnectionInfo(scHandlerID, returnCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(returnCode).ToLocalChecked());
-    
+
     free(returnCode);
     free(defretCode);
 }
@@ -54,27 +54,27 @@ NAN_METHOD(Server::GetConectionVarAsUInt64)
     uint64       scHandlerID;
     unsigned int flag;
     uint64       variable;
-    
+
     if((error = Argument::num(info, 2)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &flag, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getServerConnectionVariableAsUInt64(scHandlerID, flag, &variable)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New<v8::Number>(variable));
 }
 
@@ -87,27 +87,27 @@ NAN_METHOD(Server::GetConectionVarAsFloat)
     uint64       scHandlerID;
     unsigned int flag;
     float        variable;
-    
+
     if((error = Argument::num(info, 2)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &flag, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getServerConnectionVariableAsFloat(scHandlerID, flag, &variable)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New<v8::Number>(variable));
 }
 
@@ -118,17 +118,17 @@ NAN_METHOD(Server::GetVars)
 {
     unsigned int error;
     uint64       scHandlerID;
-    
+
     if((error = Argument::num(info, 1)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_requestServerVariables(scHandlerID)) != ERROR_ok)
     {
         return Error::throwException(error);
@@ -144,27 +144,27 @@ NAN_METHOD(Server::GetVarAsInt)
     uint64       scHandlerID;
     unsigned int flag;
     int          variable;
-    
+
     if((error = Argument::num(info, 2)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &flag, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getServerVariableAsInt(scHandlerID, flag, &variable)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New<v8::Number>(variable));
 }
 
@@ -177,27 +177,27 @@ NAN_METHOD(Server::GetVarAsUInt64)
     uint64       scHandlerID;
     unsigned int flag;
     uint64       variable;
-    
+
     if((error = Argument::num(info, 2)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &flag, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getServerVariableAsUInt64(scHandlerID, flag, &variable)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New<v8::Number>(variable));
 }
 
@@ -210,29 +210,29 @@ NAN_METHOD(Server::GetVarAsString)
     uint64       scHandlerID;
     unsigned int flag;
     char*        variable;
-    
+
     if((error = Argument::num(info, 2)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &flag, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getServerVariableAsString(scHandlerID, flag, &variable)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(variable).ToLocalChecked());
-    
+
     ts3client_freeMemory(variable);
 }
 
@@ -246,34 +246,34 @@ NAN_METHOD(Server::SendMessage)
     char*        message;
     char*        returnCode;
     char*        defretCode = Helper::createReturnCode();
-    
+
     if((error = Argument::num(info, 2, 3)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &scHandlerID, 0)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &message, "")) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &returnCode, defretCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_requestSendServerTextMsg(scHandlerID, message, returnCode)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(returnCode).ToLocalChecked());
-    
+
     freeMemory(message);
     free(returnCode);
     free(defretCode);

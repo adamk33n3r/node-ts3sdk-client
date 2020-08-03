@@ -16,13 +16,13 @@ std::string  Error::m_lastMessage = Error::translateCode(ERROR_ok);
 std::string Error::translateCode(unsigned int code)
 {
     char* result;
-    
+
     ts3client_getErrorMessage(code, &result);
-    
+
     std::string message(result);
-    
+
     ts3client_freeMemory(result);
-    
+
     return message;
 }
 
@@ -33,7 +33,7 @@ void Error::throwException(unsigned int code)
 {
     m_lastCode    = code;
     m_lastMessage = translateCode(code);
-    
+
     Nan::ThrowError(m_lastMessage.data());
 }
 
@@ -60,16 +60,16 @@ NAN_METHOD(Error::GetMessage)
 {
     unsigned int error;
     unsigned int code;
-    
+
     if((error = Argument::num(info, 1)) != ERROR_ok)
     {
         return throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &code, ERROR_undefined)) != ERROR_ok)
     {
         return throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(translateCode(code).data()).ToLocalChecked());
 }

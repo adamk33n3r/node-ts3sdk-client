@@ -16,7 +16,7 @@ std::map<std::string, Nan::Callback*> Event::m_pool;
 void Event::emit(Payload* p)
 {
     auto func = m_pool.find(p->getName());
-    
+
     if(func != m_pool.end())
     {
         auto handle = new uv_async_t();
@@ -34,9 +34,9 @@ void Event::emit(Payload* p)
 void Event::exec(uv_async_t* handle, int status)
 {
     Payload* p = (Payload*) handle->data;
-    
+
     auto func = m_pool.find(p->getName());
-    
+
     if(func != m_pool.end())
     {
         Nan::HandleScope scope;
@@ -99,7 +99,7 @@ void Event::exec(uv_async_t* handle, int status)
 void Event::done(uv_handle_t* handle)
 {
     Payload* p = (Payload*) handle->data;
-    
+
     delete p;
     delete (uv_async_t*) handle;
 }
@@ -110,19 +110,19 @@ void Event::done(uv_handle_t* handle)
 NAN_METHOD(Event::On)
 {
     unsigned int error;
-    
+
     if((error = Argument::num(info, 2)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if(!info[0]->IsString() || !info[1]->IsFunction())
     {
         return Error::throwException(ERROR_parameter_invalid);
     }
-    
+
     Nan::Callback* callback = new Nan::Callback(v8::Local<v8::Function>::Cast(info[1]));
-    
+
     m_pool[std::string(*Nan::Utf8String(info[0]))] = callback;
 }
 

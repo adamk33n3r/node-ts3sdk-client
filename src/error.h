@@ -13,11 +13,11 @@ class Error : public Nan::ObjectWrap
 {
     static unsigned int m_lastCode;
     static std::string  m_lastMessage;
-    
+
 public:
     static std::string translateCode(unsigned int code);
     static void        throwException(unsigned int code);
-    
+
     static NAN_METHOD(GetLastCode);
     static NAN_METHOD(GetLastMessage);
     static NAN_METHOD(GetMessage);

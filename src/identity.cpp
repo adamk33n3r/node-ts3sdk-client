@@ -15,19 +15,19 @@ NAN_METHOD(Identity::Create)
 {
     unsigned int error;
     char*        identity;
-    
+
     if((error = Argument::num(info)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_createIdentity(&identity)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(identity).ToLocalChecked());
-    
+
     ts3client_freeMemory(identity);
 }
 
@@ -39,24 +39,24 @@ NAN_METHOD(Identity::GetUID)
     unsigned int error;
     char*        identity;
     char*        uid;
-    
+
     if((error = Argument::num(info, 1)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &identity, "")) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_identityStringToUniqueIdentifier(identity, &uid)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(uid).ToLocalChecked());
-    
+
     freeMemory(identity);
     ts3client_freeMemory(uid);
 }

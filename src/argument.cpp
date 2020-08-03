@@ -12,7 +12,7 @@
 unsigned int Argument::num(const Nan::FunctionCallbackInfo<v8::Value> &info, int min, int max)
 {
     if(max < min) max = min;
-    
+
     if(info.Length() > max)
     {
         return ERROR_parameter_invalid_count;
@@ -40,9 +40,9 @@ unsigned int Argument::get(const Nan::FunctionCallbackInfo<v8::Value> &info, int
     {
         return ERROR_undefined;
     }
-    
+
     *res = info[arg]->IsUndefined() ? def : (anyID) info[arg]->Int32Value(Nan::GetCurrentContext()).FromJust();
-    
+
     return ERROR_ok;
 }
 
@@ -59,9 +59,9 @@ unsigned int Argument::get(const Nan::FunctionCallbackInfo<v8::Value> &info, int
     {
         return ERROR_undefined;
     }
-    
+
     *res = static_cast<uint64>(info[arg]->IsUndefined() ? def : info[arg]->NumberValue(Nan::GetCurrentContext()).FromJust());
-    
+
     return ERROR_ok;
 }
 
@@ -78,9 +78,9 @@ unsigned int Argument::get(const Nan::FunctionCallbackInfo<v8::Value> &info, int
     {
         return ERROR_undefined;
     }
-    
+
     *res = info[arg]->IsUndefined() ? def : info[arg]->Uint32Value(Nan::GetCurrentContext()).FromJust();
-    
+
     return ERROR_ok;
 }
 
@@ -97,9 +97,9 @@ unsigned int Argument::get(const Nan::FunctionCallbackInfo<v8::Value> &info, int
     {
         return ERROR_undefined;
     }
-    
+
     *res = info[arg]->IsUndefined() ? def : info[arg]->Int32Value(Nan::GetCurrentContext()).FromJust();
-    
+
     return ERROR_ok;
 }
 
@@ -116,9 +116,9 @@ unsigned int Argument::get(const Nan::FunctionCallbackInfo<v8::Value> &info, int
     {
         return ERROR_undefined;
     }
-    
+
     *res = info[arg]->IsUndefined() ? def : (float) info[arg]->NumberValue(Nan::GetCurrentContext()).FromJust();
-    
+
     return ERROR_ok;
 }
 
@@ -135,7 +135,7 @@ unsigned int Argument::get(const Nan::FunctionCallbackInfo<v8::Value> &info, int
     {
         return ERROR_undefined;
     }
-    
+
     if(info[arg]->IsUndefined())
     {
         if(def != nullptr)
@@ -153,7 +153,7 @@ unsigned int Argument::get(const Nan::FunctionCallbackInfo<v8::Value> &info, int
         *res = (char*) malloc(Nan::Utf8String(info[arg]).length()+1);
         strcpy(*res, *Nan::Utf8String(info[arg]));
     }
-    
+
     return ERROR_ok;
 }
 
@@ -166,24 +166,24 @@ unsigned int Argument::get(const Nan::FunctionCallbackInfo<v8::Value> &info, int
     {
         return ERROR_parameter_invalid;
     }
-    
+
     v8::Local<v8::Array> arr = v8::Local<v8::Array>::Cast(info[arg]);
-    
+
     for(unsigned int i = 0; i < arr->Length(); i++)
     {
         res.push_back(static_cast<anyID>(info[arg]->Uint32Value(Nan::GetCurrentContext()).FromJust()));
     }
-    
+
     if(res.empty() && def != 0)
     {
         res.push_back(def);
     }
-    
+
     if(!res.empty())
     {
         res.push_back(0);
     }
-    
+
     return ERROR_ok;
 }
 
@@ -196,24 +196,24 @@ unsigned int Argument::get(const Nan::FunctionCallbackInfo<v8::Value> &info, int
     {
         return ERROR_parameter_invalid;
     }
-    
+
     v8::Local<v8::Array> arr = v8::Local<v8::Array>::Cast(info[arg]);
-    
+
     for(unsigned int i = 0; i < arr->Length(); i++)
     {
         res.push_back(static_cast<uint64>(info[arg]->NumberValue(Nan::GetCurrentContext()).FromJust()));
     }
-    
+
     if(res.empty() && def != 0)
     {
         res.push_back(def);
     }
-    
+
     if(!res.empty())
     {
         res.push_back(0);
     }
-    
+
     return ERROR_ok;
 }
 
@@ -226,24 +226,24 @@ unsigned int Argument::get(const Nan::FunctionCallbackInfo<v8::Value> &info, int
     {
         return ERROR_parameter_invalid;
     }
-    
+
     v8::Local<v8::Array> arr = v8::Local<v8::Array>::Cast(info[arg]);
-    
+
     for(unsigned int i = 0; i < arr->Length(); i++)
     {
         res.push_back(static_cast<unsigned int>(info[arg]->Uint32Value(Nan::GetCurrentContext()).FromJust()));
     }
-    
+
     if(res.empty() && def != 0)
     {
         res.push_back(def);
     }
-    
+
     if(!res.empty())
     {
         res.push_back(0);
     }
-    
+
     return ERROR_ok;
 }
 
@@ -256,28 +256,28 @@ unsigned int Argument::get(const Nan::FunctionCallbackInfo<v8::Value> &info, int
     {
         return ERROR_parameter_invalid;
     }
-    
+
     v8::Local<v8::Array> arr = v8::Local<v8::Array>::Cast(info[arg]);
-    
+
     for(unsigned int i = 0; i < arr->Length(); i++)
     {
         char* str = (char*) malloc(Nan::Utf8String(info[arg]).length()+1);
         strcpy(str, *Nan::Utf8String(Nan::Get(arr, i).ToLocalChecked()));
         res.push_back(str);
     }
-    
+
     if(res.empty() && def != nullptr)
     {
         res.push_back((char*) def);
     }
-    
+
     if(!res.empty())
     {
         char* str = (char*) malloc(sizeof(char));
         str[0] = '\0';
         res.push_back(str);
     }
-    
+
     return ERROR_ok;
 }
 

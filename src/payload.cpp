@@ -13,13 +13,13 @@ Payload::Payload(const char* name, const char* frmt, ...)
 {
     m_name = name;
     m_frmt = frmt;
-    
+
     uint64       arg_6;
     unsigned int arg_I;
     int          arg_i;
     double       arg_f;
     char*        arg_s;
-    
+
     if(m_frmt.length())
     {
         va_list vl;

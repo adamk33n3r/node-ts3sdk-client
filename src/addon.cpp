@@ -27,7 +27,7 @@ void Init(v8::Local<v8::Object> exports)
     Nan::SetMethod(exports, "destroyClientLib",          ClientLib::Destroy);
     Nan::SetMethod(exports, "getClientLibVersion",       ClientLib::GetVersion);
     Nan::SetMethod(exports, "getClientLibVersionNumber", ClientLib::GetVersionNumber);
-    
+
     // connection
     Nan::SetMethod(exports, "spawnNewServerConnectionHandler", Connection::Init);
     Nan::SetMethod(exports, "destroyServerConnectionHandler",  Connection::Destroy);
@@ -40,11 +40,11 @@ void Init(v8::Local<v8::Object> exports)
     Nan::SetMethod(exports, "getConnectionVariableAsDouble",   Connection::GetInfoVarAsDouble);
     Nan::SetMethod(exports, "getConnectionVariableAsString",   Connection::GetInfoVarAsString);
     Nan::SetMethod(exports, "cleanUpConnectionInfo",           Connection::CleanupInfo);
-    
+
     // identity
     Nan::SetMethod(exports, "createIdentity",                   Identity::Create);
     Nan::SetMethod(exports, "identityStringToUniqueIdentifier", Identity::GetUID);
-    
+
     // capture
     Nan::SetMethod(exports, "openCaptureDevice",             Capture::OpenDevice);
     Nan::SetMethod(exports, "closeCaptureDevice",            Capture::CloseDevice);
@@ -60,7 +60,7 @@ void Init(v8::Local<v8::Object> exports)
     Nan::SetMethod(exports, "getPreProcessorConfigValue",    Capture::GetConfigValue);
     Nan::SetMethod(exports, "setPreProcessorConfigValue",    Capture::SetConfigValue);
     Nan::SetMethod(exports, "getEncodeConfigValue",          Capture::GetEncoderValue);
-    
+
     // playback
     Nan::SetMethod(exports, "openPlaybackDevice",               Playback::OpenDevice);
     Nan::SetMethod(exports, "closePlaybackDevice",              Playback::CloseDevice);
@@ -74,7 +74,7 @@ void Init(v8::Local<v8::Object> exports)
     Nan::SetMethod(exports, "getDefaultPlaybackMode",           Playback::GetDefaultMode);
     Nan::SetMethod(exports, "getPlaybackConfigValueAsFloat",    Playback::GetConfigValue);
     Nan::SetMethod(exports, "setPlaybackConfigValue",           Playback::SetConfigValue);
-    
+
     // client
     Nan::SetMethod(exports, "getClientID",                   Client::GetOwnID);
     Nan::SetMethod(exports, "getClientSelfVariableAsInt",    Client::GetOwnVarAsInt);
@@ -125,7 +125,7 @@ void Init(v8::Local<v8::Object> exports)
     Nan::SetMethod(exports, "requestChannelSubscribeAll",   Channel::SubscribeAll);
     Nan::SetMethod(exports, "requestChannelUnsubscribeAll", Channel::UnsubscribeAll);
     Nan::SetMethod(exports, "requestSendChannelTextMsg",    Channel::SendMessage);
-    
+
     // server
     Nan::SetMethod(exports, "requestServerConnectionInfo",         Server::GetConectionInfo);
     Nan::SetMethod(exports, "getServerConnectionVariableAsUInt64", Server::GetConectionVarAsUInt64);
@@ -135,7 +135,7 @@ void Init(v8::Local<v8::Object> exports)
     Nan::SetMethod(exports, "getServerVariableAsUInt64",           Server::GetVarAsUInt64);
     Nan::SetMethod(exports, "getServerVariableAsString",           Server::GetVarAsString);
     Nan::SetMethod(exports, "requestSendServerTextMsg",            Server::SendMessage);
-    
+
     // filetransfer
     Nan::SetMethod(exports, "sendFile",                                 FileTransfer::InitUpload);
     Nan::SetMethod(exports, "requestFile",                              FileTransfer::InitDownload);
@@ -165,16 +165,16 @@ void Init(v8::Local<v8::Object> exports)
     Nan::SetMethod(exports, "getCurrentTransferSpeed",                  FileTransfer::GetTransferSpeed);
     Nan::SetMethod(exports, "getAverageTransferSpeed",                  FileTransfer::GetTransferSpeedAverage);
     Nan::SetMethod(exports, "isTransferSender",                         FileTransfer::IsTransferSender);
-    
+
     // log
     Nan::SetMethod(exports, "logMessage",      Log::AddMessage);
     Nan::SetMethod(exports, "setLogVerbosity", Log::SetVerbosity);
-    
+
     // error
     Nan::SetMethod(exports, "getLastError",        Error::GetLastCode);
     Nan::SetMethod(exports, "getLastErrorMessage", Error::GetLastMessage);
     Nan::SetMethod(exports, "getErrorMessage",     Error::GetMessage);
-    
+
     // callback
     Nan::SetMethod(exports, "on", Event::On);
 }

@@ -16,19 +16,19 @@ class Payload
         char         type;
         void*        data;
     };
-    
+
     std::string       m_name;
     std::string       m_frmt;
     std::vector<arg*> m_args;
-    
+
 public:
     Payload(const char* func, const char* frmt, ...);
     ~Payload();
-    
+
     std::string getName();
     std::string getFormat();
     size_t      getLength();
-    
+
     template<typename T>
     T getArgument(size_t n)
     {
@@ -39,7 +39,7 @@ public:
 
         return *reinterpret_cast<T*>(m_args[n]->data);
     }
-    
+
 private:
     unsigned int getTypeSize(char type);
 };
@@ -51,7 +51,7 @@ inline char* Payload::getArgument(size_t n)
     {
         return nullptr;
     }
-    
+
     return reinterpret_cast<char*>(m_args[n]->data);
 }
 

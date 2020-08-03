@@ -18,29 +18,29 @@ NAN_METHOD(ClientLib::Init)
     unsigned int logType;
     char*        logPath;
     char*        resPath;
-    
+
     if((error = Argument::num(info, 0, 3)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 0, &logType, LogType_NONE)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 1, &logPath, nullptr)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = Argument::get(info, 2, &resPath, nullptr)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     memset(&clientSDK, 0, sizeof(struct ClientUIFunctions));
-    
+
     clientSDK.onConnectStatusChangeEvent           = Event::onConnectStatusChangeEvent;
     clientSDK.onServerProtocolVersionEvent         = Event::onServerProtocolVersionEvent;
     clientSDK.onNewChannelEvent                    = Event::onNewChannelEvent;
@@ -80,7 +80,7 @@ NAN_METHOD(ClientLib::Init)
     clientSDK.onFileListEvent                      = Event::onFileListEvent;
     clientSDK.onFileListFinishedEvent              = Event::onFileListFinishedEvent;
     clientSDK.onFileInfoEvent                      = Event::onFileInfoEvent;
-    
+
     if((error = ts3client_initClientLib(&clientSDK, nullptr, logType, logPath, resPath)) != ERROR_ok)
     {
         return Error::throwException(error);
@@ -96,12 +96,12 @@ NAN_METHOD(ClientLib::Init)
 NAN_METHOD(ClientLib::Destroy)
 {
     unsigned int error;
-    
+
     if((error = Argument::num(info)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_destroyClientLib()) != ERROR_ok)
     {
         return Error::throwException(error);
@@ -115,19 +115,19 @@ NAN_METHOD(ClientLib::GetVersion)
 {
     unsigned int error;
     char*        version;
-    
+
     if((error = Argument::num(info)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getClientLibVersion(&version)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New(version).ToLocalChecked());
-    
+
     ts3client_freeMemory(version);
 }
 
@@ -138,16 +138,16 @@ NAN_METHOD(ClientLib::GetVersionNumber)
 {
     unsigned int error;
     uint64       version;
-    
+
     if((error = Argument::num(info)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     if((error = ts3client_getClientLibVersionNumber(&version)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
-    
+
     info.GetReturnValue().Set(Nan::New<v8::Number>(version));
 }
