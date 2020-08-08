@@ -173,7 +173,7 @@ NAN_METHOD(Capture::ListDevices)
     for(; devices[n] != NULL; ++n)
     {}
 
-    v8::Local<v8::Array> arr = Nan::New<v8::Array>(n+1);
+    v8::Local<v8::Array> arr = Nan::New<v8::Array>(n);
 
     for(int i = 0; devices[i] != NULL; ++i)
     {
