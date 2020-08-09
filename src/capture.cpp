@@ -201,14 +201,25 @@ NAN_METHOD(Capture::ListDevices)
 NAN_METHOD(Capture::GetDefaultDevice)
 {
     unsigned int error;
+    char*        mode;
+    char*        modeDefault;
     char**       deviceDefault;
 
-    if((error = Argument::num(info, 1, 1)) != ERROR_ok)
+    if((error = Argument::num(info, 0, 1)) != ERROR_ok)
     {
         return Error::throwException(error);
     }
 
-    char* mode = *Nan::Utf8String(info[0]);
+    if((error = ts3client_getDefaultCaptureMode(&modeDefault)) != ERROR_ok)
+    {
+        return Error::throwException(error);
+    }
+
+    if((error = Argument::get(info, 0, &mode, modeDefault)) != ERROR_ok)
+    {
+        return Error::throwException(error);
+    }
+
     if((error = ts3client_getDefaultCaptureDevice(mode, &deviceDefault)) != ERROR_ok)
     {
         return Error::throwException(error);
